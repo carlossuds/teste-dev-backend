@@ -37,30 +37,36 @@ class UserController {
 
         const createdUsers = [];
 
-        newContactsArray.forEach(async contact => {
+        for (let n = 0; n < newContactsArray.length; n++) {
+          const contact = newContactsArray[n];
+
           const userExists = await User.findOne({
             where: { email: contact.email },
           });
 
           if (userExists) {
-            return res
+            /* return res
               .status(400)
-              .json({ error: `User ${contact.email} already exists!` });
+              .json({ error: `User <${contact.email}> already exists!` }); */
+            continue;
           }
 
           try {
             const user = await User.create(contact);
+
             createdUsers.push(user);
+
+            if (n === newContactsArray.length - 1) {
+              return res.json(
+                `${createdUsers.length} usuários criados com sucesso!`
+              );
+            }
           } catch (erro) {
             return res
               .status(401)
               .json({ error: `Error creating user: ${contact.email}` });
           }
-
-          return res.json(`${createdUsers} criados com sucesso!`);
-        });
-
-        res.json(newContactsArray);
+        }
       }
     );
   }
