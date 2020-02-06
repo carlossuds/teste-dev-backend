@@ -1,5 +1,7 @@
 import fs from 'fs';
 import neatCsv from 'neat-csv';
+import api from '../../services/api';
+
 import parseStringAsArray from '../../utils/parseStringAsArray';
 
 import User from '../models/User';
@@ -52,6 +54,8 @@ class UserController {
           }
 
           try {
+            api.post('/contacts', contact);
+
             const user = await User.create(contact);
 
             createdUsers.push(user);
